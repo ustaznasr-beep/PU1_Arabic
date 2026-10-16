@@ -1,0 +1,631 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>التغذية الراجعة للورقة الأولى</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow reading column, three steps (upload → check transcription → feedback), ink-green on cool paper with gold for marks */
+:root{
+  --paper:#f5f7f4; --sheet:#ffffff; --ink:#18241f; --muted:#5b6b63; --line:#d9e2dc;
+  --green:#1e5b45; --green-soft:#e3efe8; --gold:#a77a17; --gold-soft:#f6ecd4;
+  --warn:#9a4a12; --warn-soft:#fbeadd; --good:#1e6b3e;
+  --f-display:"Reem Kufi","Noto Naskh Arabic",serif;
+  --f-body:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;
+  --f-ui:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#111816; --sheet:#18211e; --ink:#e7eee9; --muted:#9fb0a7; --line:#2c3a34;
+  --green:#6cc29d; --green-soft:#1d3229; --gold:#e0b453; --gold-soft:#33291a;
+  --warn:#f0a26b; --warn-soft:#3a2518; --good:#7fd39e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111816; --sheet:#18211e; --ink:#e7eee9; --muted:#9fb0a7; --line:#2c3a34;
+  --green:#6cc29d; --green-soft:#1d3229; --gold:#e0b453; --gold-soft:#33291a;
+  --warn:#f0a26b; --warn-soft:#3a2518; --good:#7fd39e; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:4px;border-bottom:2px solid var(--green);padding-bottom:14px}
+.eyebrow{font-size:12px;letter-spacing:.06em;color:var(--muted);direction:ltr;text-align:right}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,38px);margin:0;color:var(--green);text-wrap:balance}
+.sub{color:var(--muted);margin:0}
+.en{direction:ltr;unicode-bidi:isolate;font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.step{flex:1 1 140px;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--muted);font-size:13.5px}
+.step b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1px solid var(--line);font-size:12px;font-variant-numeric:tabular-nums}
+.step.on{border-color:var(--green);color:var(--ink)}
+.step.on b{background:var(--green);border-color:var(--green);color:var(--sheet)}
+.step.done b{background:var(--green-soft);color:var(--green);border-color:var(--green-soft)}
+section.panel{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px}
+h2{font-family:var(--f-display);font-weight:500;font-size:21px;margin:0;color:var(--ink)}
+h3{font-family:var(--f-ui);font-weight:600;font-size:15px;margin:0}
+label.fl{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+textarea,select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%}
+textarea:focus,select:focus,button:focus-visible,.drop:focus-within{outline:2px solid var(--green);outline-offset:2px}
+textarea.arabic{font-family:var(--f-body);font-size:18px;line-height:2}
+#transcript{min-height:320px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>*{flex:1 1 220px;min-width:0}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;cursor:pointer;background:var(--paper)}
+.drop.over{border-color:var(--green);background:var(--green-soft)}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.thumb{position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper)}
+.thumb img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.thumb span{position:absolute;inset:auto 0 0 0;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:2px 6px}
+.thumb button{position:absolute;top:4px;left:4px;width:26px;height:26px;padding:0;border-radius:50%;font-size:14px;line-height:1}
+.tips{margin:0;padding-inline-start:20px;color:var(--muted);font-size:13.5px;display:flex;flex-direction:column;gap:2px}
+button{font:inherit;font-weight:600;border-radius:6px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);padding:10px 16px;cursor:pointer}
+button.primary{background:var(--green);border-color:var(--green);color:var(--sheet)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{padding:12px 14px;border-radius:8px;font-size:14px}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.info{background:var(--green-soft);color:var(--ink)}
+.busy{display:flex;align-items:center;gap:12px;color:var(--muted)}
+.spin{width:20px;height:20px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--green);animation:sp 1s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.chip.used{background:var(--green-soft);border-color:var(--green);color:var(--green);font-weight:600}
+.chip.unclear{background:var(--warn-soft);border-color:var(--warn-soft);color:var(--warn);font-family:var(--f-body);font-size:15px}
+/* report */
+.score{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.total{font-family:var(--f-display);font-size:52px;line-height:1;color:var(--green);font-variant-numeric:tabular-nums;white-space:nowrap}
+.total small{font-size:22px;color:var(--muted)}
+.badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:4px;background:var(--gold-soft);color:var(--gold);font-weight:600}
+.crit{display:flex;flex-direction:column;gap:14px}
+.c{display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.c:last-child{border-bottom:0;padding-bottom:0}
+.c-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.c-mark{font-variant-numeric:tabular-nums;font-weight:600;color:var(--gold)}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;direction:rtl}
+.bar i{display:block;height:100%;background:var(--gold)}
+.band{font-weight:600;color:var(--green)}
+.list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.item{border-inline-start:3px solid var(--green);padding-inline-start:12px;display:flex;flex-direction:column;gap:6px}
+.item.imp{border-color:var(--gold)}
+q,.quote{font-family:var(--f-body);font-size:17px;line-height:1.9;quotes:"«" "»";color:var(--ink);background:var(--paper);padding:4px 10px;border-radius:4px;display:block}
+.fix{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:baseline}
+.fix .k{font-size:12.5px;color:var(--muted)}
+.fix .ar{font-family:var(--f-body);font-size:17px}
+.strike{text-decoration:line-through;text-decoration-color:var(--warn);color:var(--muted)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 8px;text-align:center;vertical-align:top}
+th{background:var(--paper);font-weight:600}
+td.l{text-align:start}
+.st-ok{color:var(--good);font-weight:600}.st-weak{color:var(--gold);font-weight:600}.st-miss{color:var(--warn);font-weight:600}
+ol.next{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.lang-ltr{direction:ltr;text-align:left}
+.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
+.topic{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--paper);cursor:pointer}
+.topic:has(input:checked){border-color:var(--green);background:var(--green-soft)}
+.topic input{margin-top:6px;accent-color:var(--green)}
+.topic strong{font-family:var(--f-display);font-weight:500;font-size:17px;display:block}
+.topic p{margin:2px 0 0;font-family:var(--f-body);font-size:14.5px;line-height:1.8;color:var(--muted)}
+.wc{font-variant-numeric:tabular-nums;font-size:13.5px}
+.wc.low,.wc.high{color:var(--warn);font-weight:600}
+.demands{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.demands li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:baseline}
+.demands .d{font-family:var(--f-body);font-size:16px}
+footer{color:var(--muted);font-size:12.5px;text-align:center}
+@media (max-width:480px){.score{grid-template-columns:1fr}.total{font-size:44px}}
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="eyebrow">MADRASAH ALJUNIED AL-ISLAMIAH · PRE-UNIVERSITY ONE</div>
+    <h1>التَّغْذِيَةُ الرَّاجِعَةُ لِلْوَرَقَةِ الْأُولَى قَبْلَ الِامْتِحَانِ</h1>
+    <p class="sub">تَحَقَّقْ مِنْ مَقَالِكَ قَبْلَ أَنْ تُسَلِّمَهُ <span class="en">· Check your essay before you submit it</span></p>
+  </header>
+
+  <div class="steps" aria-label="Steps">
+    <div class="step on" id="s1"><b>١</b> اِرْفَعْ مَقَالَكَ <span class="en">Upload</span></div>
+    <div class="step" id="s2"><b>٢</b> رَاجِعِ النَّصَّ <span class="en">Check text</span></div>
+    <div class="step" id="s3"><b>٣</b> التَّغْذِيَةُ الرَّاجِعَةُ <span class="en">Feedback</span></div>
+  </div>
+
+  <div class="note warn" id="unavail" hidden>
+    لَا يَعْمَلُ الْمُصَحِّحُ فِي هَذِهِ النَّافِذَةِ. اِفْتَحِ الرَّابِطَ وَأَنْتَ مُسَجِّلٌ الدُّخُولَ إِلَى حِسَابِكَ فِي Claude، وَاسْمَحْ لِلصَّفْحَةِ بِاسْتِعْمَالِهِ.
+    <div class="en">The checker can't run here. Open the link while signed in to Claude, and allow the page to use Claude when asked.</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="panel" id="p1">
+    <h2>١. اِرْفَعْ صُوَرَ مَقَالِكَ</h2>
+    <fieldset style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
+      <legend style="font-weight:600;font-size:14px;padding:0;margin-bottom:8px">اِخْتَرِ الْمَوْضُوعَ الَّذِي كَتَبْتَ فِيهِ <span class="en">Which topic did you write on? · 250–400 words</span></legend>
+      <div class="topics" id="topics"></div>
+    </fieldset>
+    <div class="row">
+      <label class="fl" for="flang">لُغَةُ الشَّرْحِ <span class="en">Explain the feedback in</span>
+        <select id="flang">
+          <option value="ar">العربية</option>
+          <option value="en" selected>English (Arabic examples kept)</option>
+          <option value="ms">Bahasa Melayu (contoh Arab dikekalkan)</option>
+        </select>
+      </label>
+    </div>
+    <label class="drop" id="drop" for="file">
+      <input type="file" id="file" accept="image/jpeg,image/png,image/webp" multiple>
+      <strong>اِضْغَطْ هُنَا لِاخْتِيَارِ الصُّوَرِ أَوِ اسْحَبْهَا إِلَى هُنَا</strong>
+      <span class="en">Tap to choose photos, or drag them here · one photo per page, in order</span>
+    </label>
+    <div class="thumbs" id="thumbs"></div>
+    <ul class="tips">
+      <li>صَوِّرْ كُلَّ صَفْحَةٍ وَحْدَهَا، مِنْ فَوْقُ مُبَاشَرَةً، فِي ضَوْءٍ جَيِّدٍ وَبِلَا ظِلٍّ.</li>
+      <li>تَأَكَّدْ أَنَّ السُّطُورَ كُلَّهَا ظَاهِرَةٌ وَوَاضِحَةٌ قَبْلَ الرَّفْعِ.</li>
+      <li class="en">One page per photo, taken straight from above, in good light with no shadow. Check every line is sharp.</li>
+    </ul>
+    <div class="actions">
+      <button class="primary" id="btnRead" disabled>اِقْرَأْ مَقَالِي <span class="en">Read my essay</span></button>
+      <span class="en" id="countNote"></span>
+    </div>
+    <div id="busy1" class="busy" hidden><div class="spin"></div><span>نَقْرَأُ خَطَّكَ… قَدْ يَسْتَغْرِقُ ذَلِكَ دَقِيقَةً. <span class="en">Reading your handwriting, this can take a minute.</span></span></div>
+    <div id="err1" class="note warn" hidden></div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" id="p2" hidden>
+    <h2>٢. رَاجِعْ نَصَّ مَقَالِكَ</h2>
+    <div class="note info">
+      هَذَا مَا قَرَأَهُ الْمُصَحِّحُ مِنْ خَطِّكَ. صَحِّحْ فَقَطْ مَا قُرِئَ خَطَأً لِيُطَابِقَ مَا كَتَبْتَهُ أَنْتَ. لَا تُحَسِّنْ مَقَالَكَ هُنَا؛ فَالتَّقْيِيمُ لِمَا كَتَبْتَهُ فِعْلًا.
+      <div class="en">This is what the checker read from your handwriting. Fix only words it misread, so the text matches what you wrote. Don't improve your essay here: the feedback is on what you actually wrote.</div>
+    </div>
+    <div id="unclearBox" hidden>
+      <h3>كَلِمَاتٌ لَمْ تَتَّضِحْ <span class="en">Words that were hard to read, check these first</span></h3>
+      <div class="chips" id="unclear"></div>
+    </div>
+    <label class="fl" for="transcript">نَصُّ الْمَقَالِ <span class="en">Your essay text · leave a blank line between paragraphs</span>
+      <textarea id="transcript" class="arabic"></textarea>
+    </label>
+    <div class="wc" id="wc"></div>
+    <div class="actions">
+      <button class="primary" id="btnAssess">قَيِّمْ مَقَالِي <span class="en">Get my feedback</span></button>
+      <button id="btnBack1">رُجُوعٌ <span class="en">Back</span></button>
+    </div>
+    <div id="busy2" class="busy" hidden><div class="spin"></div><span>نُقَيِّمُ مَقَالَكَ وَفْقَ مَعَايِيرِ الْقِسْمِ… <span class="en">Marking against the department rubric, about a minute or two.</span></span></div>
+    <div id="err2" class="note warn" hidden></div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" id="p3" hidden>
+    <h2>٣. التَّغْذِيَةُ الرَّاجِعَةُ</h2>
+    <div class="score">
+      <div class="total" id="total">–</div>
+      <div>
+        <span class="badge">تَقْدِيرٌ اسْتِرْشَادِيٌّ · Indicative only</span>
+        <p id="summary" style="margin:6px 0 0"></p>
+        <p class="en" style="margin:4px 0 0">Your teacher gives the final mark. Use this to improve your redraft.</p>
+      </div>
+    </div>
+    <div class="crit" id="crit"></div>
+  </section>
+
+  <section class="panel" id="p3b" hidden>
+    <h2>تَغْطِيَةُ الْمَطْلُوبِ <span class="en">Did you answer every part of the question?</span></h2>
+    <p class="en" id="wcReport" style="margin:0"></p>
+    <ul class="demands" id="demands"></ul>
+  </section>
+
+  <section class="panel" id="p4" hidden>
+    <h2>بِنَاءُ الْمَقَالِ <span class="en">Structure</span></h2>
+    <p class="en" style="margin:0">Each body paragraph should move through: claim (تأكيد) → evidence (تدليل) → reasoning (تعليل) → link to the question (ربط).</p>
+    <div class="tbl"><table id="struct"></table></div>
+  </section>
+
+  <section class="panel" id="p5" hidden>
+    <h2>نِقَاطُ الْقُوَّةِ <span class="en">Strengths</span></h2>
+    <ul class="list" id="strengths"></ul>
+  </section>
+
+  <section class="panel" id="p6" hidden>
+    <h2>مَجَالَاتُ التَّحْسِينِ <span class="en">Areas to improve</span></h2>
+    <ul class="list" id="improve"></ul>
+  </section>
+
+  <section class="panel" id="p7" hidden>
+    <h2>أَخْطَاءٌ لُغَوِيَّةٌ <span class="en">Language corrections</span></h2>
+    <ul class="list" id="errors"></ul>
+  </section>
+
+  <section class="panel" id="p8" hidden>
+    <h2>أَدَوَاتُ الْكَاتِبِ <span class="en">Writer's tools you used</span></h2>
+    <p class="en" style="margin:0">From the grammar, morphology and rhetoric investigators. Highlighted ones appear in your essay.</p>
+    <div class="chips" id="tools"></div>
+  </section>
+
+  <section class="panel" id="p9" hidden>
+    <h2>خُطُوَاتُكَ التَّالِيَةُ <span class="en">Your next steps</span></h2>
+    <ol class="next" id="next"></ol>
+    <div class="actions">
+      <button id="btnCopy">اِنْسَخِ التَّغْذِيَةَ <span class="en">Copy feedback</span></button>
+      <button id="btnRedo">صَحِّحِ النَّصَّ وَأَعِدِ التَّقْيِيمَ <span class="en">Edit text &amp; re-check</span></button>
+      <button id="btnNew">مَقَالٌ جَدِيدٌ <span class="en">New essay</span></button>
+      <span id="copied" class="en" hidden>Copied</span>
+    </div>
+    <textarea id="copyBox" rows="8" readonly hidden aria-label="Feedback text to copy"></textarea>
+    <div hidden>
+    </div>
+  </section>
+
+  <footer>الأستاذ محمد نصر الله رفاعي والأستاذ د. بحر الدين</footer>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+let sample = null, files = [], lastReport = null, maxImages = 5;
+
+const MAX = {language:12, message:12, concept:6};
+const NAMES = {
+  language:{ar:"مِعْيَارُ اللُّغَةِ", en:"Language"},
+  message:{ar:"مِعْيَارُ الرِّسَالَةِ", en:"Message / Task"},
+  concept:{ar:"الِاسْتِيعَابُ الْمَبْنِيُّ عَلَى الْمَفَاهِيمِ", en:"Conceptual understanding"}
+};
+const TOOLS = ["إِنَّ وَأَخَوَاتُهَا","كَانَ وَأَخَوَاتُهَا","لَا النَّافِيَةُ لِلْجِنْسِ","أُسْلُوبُ الشَّرْطِ","لَامُ التَّعْلِيلِ / لِأَنَّ","الْمَفْعُولُ الْمُطْلَقُ","الْمَفْعُولُ لِأَجْلِهِ","النَّعْتُ","كَمِ الْخَبَرِيَّةُ","أُسْلُوبُ الْحَصْرِ (إِنَّمَا)","الِاسْتِدْرَاكُ","الِاسْتِفْهَامُ","التَّشْبِيهُ","الِاسْتِعَارَةُ","الْكِنَايَةُ","الطِّبَاقُ","الْمُقَابَلَةُ","التَّعْبِيرَاتُ الِاصْطِلَاحِيَّةُ","أَدَوَاتُ الرَّبْطِ"];
+
+const RUBRIC = `
+معايير التقييم لمستوى الصفوف العالية – قسم اللغة العربية بمدرسة الجنيد الإسلامية (المجموع ٣٠)
+
+١. معيار اللغة (من ١٢) – ما مدى نجاح الطالب في إتقان اللغة المكتوبة: ملاءمة المفردات وتنوعها، تنوع التراكيب النحوية، دقة اللغة في التواصل الفعال.
+• ٠: لا يصل العمل إلى المعيار الموصوف في التقديرات أدناه.
+• ١–٣ مستوى إتقان اللغة محدود: المفردات مناسبة للمهمة أحيانا. تم استخدام بعض التراكيب النحوية البسيطة، مع بعض المحاولات لاستخدام التراكيب الأكثر تعقيدا. تحتوي اللغة أخطاء في التراكيب البسيطة والأكثر تعقيدا. الأخطاء تعيق التواصل.
+• ٤–٦ مستوى إتقان اللغة فعال جزئيا: المفردات ملائمة بشكل عام للمهمة ومتنوعة. مجموعة متنوعة من التراكيب البسيطة وبعض التراكيب الأكثر تعقيدا. اللغة دقيقة في الغالب مع التراكيب البسيطة ولكن هناك أخطاء تعيق التواصل أحيانا.
+• ٧–٩ مستوى إتقان اللغة فعال ودقيق في الغالب: المفردات ملائمة ومتنوعة وتشمل استعمال التعبيرات الاصطلاحية. مجموعة متنوعة من التراكيب البسيطة والأكثر تعقيدا استخداما فعالا. اللغة دقيقة في الغالب؛ الأخطاء العرضية في التراكيب البسيطة والمعقدة لا تعيق التواصل.
+• ١٠–١٢ مستوى إتقان اللغة دقيق في الغالب وفعال جدا: المفردات ملائمة للمهمة ومتنوعة ومتباينة بطريقة تعزز الرسالة، ويشمل الاستعمال الهادف للتعبيرات الاصطلاحية. مجموعة متنوعة من التراكيب البسيطة والأكثر تعقيدا استخداما انتقائيا لتعزيز التواصل. اللغة دقيقة في الغالب؛ الأخطاء البسيطة في التراكيب الأكثر تعقيدا لا تعيق التواصل.
+
+٢. معيار الرسالة (من ١٢) – إلى أي حد يستوفي الطالب المهمة: صلة الأفكار بالمهمة، تطور الأفكار، وضوح الأفكار وتنظيمها في إيصال الرسالة.
+• ٠: لا يصل العمل إلى المعيار.
+• ١–٣ المهمة مستوفاة جزئيا: قليل من الأفكار ذات صلة بالمهمة. الأفكار مذكورة لكن دون تطوير لها. الأفكار غير معروضة بوضوح ولا تتبع تنظيما منطقيا، مما يجعل من الصعب تحديد الرسالة.
+• ٤–٦ المهمة مستوفاة بشكل عام: بعض الأفكار ذات صلة بالمهمة. الأفكار مذكورة بإيجاز لكنها لم تتطور بالكامل. الأفكار معروضة بوضوح بشكل عام والإجابة منظمة تنظيما منطقيا بشكل عام، مما يؤدي إلى إيصال الرسالة بنجاح بغالب.
+• ٧–٩ المهمة مستوفاة: معظم الأفكار ذات صلة بالمهمة. الأفكار مطورة جيدا مع بعض التفاصيل والأمثلة. الأفكار معروضة بوضوح والإجابة منظمة تنظيما منطقيا، مما يدعم إيصال الرسالة.
+• ١٠–١٢ المهمة مستوفاة بفعالية: الأفكار ذات صلة بالمهمة. الأفكار مطورة بالكامل مع تزويد التفاصيل والأمثلة ذات الصلة. الأفكار معروضة بوضوح والإجابة منظمة تنظيما منطقيا ومترابطا، يدعم إيصال الرسالة.
+
+٣. معيار الاستيعاب المبني على المفاهيم (من ٦): ملاءمة نوع النص للمهمة، ملاءمة الاختيارات اللغوية والنبرة لسياق وغرض وجمهور المهمة، اشتمال الإجابة على الأنظمة والأعراف الخاصة بنوع النص المختار.
+• ٠: لا يصل العمل إلى المعيار.
+• ١–٢ محدود: اختيار نوع النص غير ملائم بشكل عام للسياق أو الغرض أو الجمهور. الاختيارات اللغوية والنبرة غير ملائمة. ملامح محدودة لأعراف نوع النص.
+• ٣–٤ معروض في الغالب: نوع النص ملائم بشكل عام. الاختيارات اللغوية والنبرة تفتقد للثبات في أرجاء الإجابة مع أنها ملائمة من حين لآخر. تشمل الإجابة بعض أعراف نوع النص.
+• ٥–٦ معروض عرضا كاملا: نوع النص ملائم. الاختيارات اللغوية والنبرة ملائمة لسياق وغرض وجمهور المهمة. تشمل الإجابة بالكامل الأنظمة والأعراف الخاصة بنوع النص المختار.`;
+
+const GENRE = `
+أعراف المقال (الحجاجي/النقاشي) كما دُرِّست في وحدة «مختبر الكاتب: اقرأ كالكاتب» — طبّقها بمرونة بحسب طبيعة الموضوع (فموضوع الكوارث مثلًا يغلب عليه عرض الأسباب والآثار والحلول):
+• المقدمة: عرض القضية وإثارة اهتمام القارئ وإعلان الرأي بوضوح (قد تنتهي بسؤال المقال).
+• كل فقرة متن تتبع الترتيب: تأكيد (الفكرة بأسلوب مؤكَّد، مثل: لا شك أن… / إنّ…) ← تدليل (دليل واقعي أو مثال ملموس) ← تعليل (بيان السبب، مثل: لأنّ… / رغبةً في…) ← ربط بالسؤال (العودة إلى ألفاظ السؤال).
+• الخاتمة: تلخيص الرأي والعودة إلى السؤال بألفاظه، والختم بدعوة إلى العمل.
+• أدوات الإقناع النحوية: إنّ وأخواتها، كان وأخواتها، لا النافية للجنس، الشرط (إن صلح صلح…)، لام التعليل/لأنّ، المفعول المطلق (يقتحم الصعب اقتحامًا)، المفعول لأجله (رغبةً في…)، النعت، كم الخبرية، الحصر بإنّما، الاستدراك (على أنّ…).
+• أدوات بلاغية: التشبيه، الاستعارة، المجاز، الكناية، الطباق، المقابلة.
+• أدوات صرفية: تنويع الأوزان (الرباعي، افتعل، استفعل، النسبة).
+• نموذج فقرة متن مبسّطة: «للشباب قدرة على الإبداع لا تُنكر. فكثير من الإنجازات الكبرى صنعها شباب صغار. وذلك لأنهم لا يخافون المخاطرة ويطمحون للجديد. فطاقة الشباب إذن سلطة حقيقية للتغيير.»
+• مبدأ القسم: كافئ التحليل والحجة المختلفة الصحيحة المدعّمة، فالمقصود تنمية تفكير الكاتب لا التلقين. الطالب حر في رأيه (مؤيد أو معارض أو متوازن) ما دام يدافع عنه بحجة.`;
+
+const TOPICS = [
+ {t:"الْعَدْلُ وَالْمُسَاوَاةُ", q:"العدل والمساواة أساسان مهمّان لبناء المجتمع. هل تعني المساواة معاملة الجميع بالطريقة نفسها، أم أنّ العدل يراعي الفروق والاحتياجات؟ ناقش مفهومهما وأهمّيّتهما، وبيّن كيف نحقّقهما لضمان حقوق الإنسان."},
+ {t:"الذَّكَاءُ الِاصْطِنَاعِيُّ", q:"يُحدث الذكاء الاصطناعيّ تغيّرات سريعة في حياتنا، وله فوائد كثيرة ومخاوف أيضًا. ما رأيك فيه؟ ناقش إيجابياته وسلبياته وتأثيره على مستقبل البشر."},
+ {t:"الْعَلَاقَاتُ الِاجْتِمَاعِيَّةُ", q:"العلاقات الاجتماعيّة عنصر مهمّ في بناء الإنسان والمجتمع، لكنها تواجه اليوم تحدّيات جديدة. كيف تؤثّر العلاقات في حياتنا؟ وما العوامل التي تقوّيها أو تضعفها؟ تحدّث عن ذلك، مع بيان دور وسائل التواصل الاجتماعيّ."},
+ {t:"الْكَوَارِثُ الطَّبِيعِيَّةُ", q:"تشهد بعض مناطق العالم كوارث طبيعيّة مدمّرة، كالزلازل والفيضانات. هل يمكن للإنسان أن يخفّف من آثارها؟ ناقش أسبابها وآثارها على الإنسان والبيئة، وبيّن كيف نحدّ من أضرارها."}
+];
+const topicBox = document.getElementById("topics");
+TOPICS.forEach((tp,i) => {
+  const lab = document.createElement("label"); lab.className = "topic"; lab.htmlFor = "tp"+i;
+  const r = document.createElement("input"); r.type="radio"; r.name="topic"; r.id="tp"+i; r.value=i; if(!i) r.checked = true;
+  const d = document.createElement("div"); const st = document.createElement("strong"); st.textContent = (i+1) + ". " + tp.t;
+  const pp = document.createElement("p"); pp.textContent = tp.q; d.append(st, pp); lab.append(r, d); topicBox.append(lab);
+});
+const chosen = () => TOPICS[Number((document.querySelector('input[name="topic"]:checked')||{}).value||0)];
+const words = t => (t.trim().match(/[\u0600-\u06FFA-Za-z0-9]+/g)||[]).length;
+
+const LANGNAME = {ar:"Arabic (simple, clear Modern Standard Arabic suited to a Pre-University student)", en:"English", ms:"Bahasa Melayu"};
+
+function show(id, on=true){ $(id).hidden = !on; }
+function setStep(n){ [1,2,3].forEach(i=>{ const s=$("s"+i); s.classList.toggle("on", i===n); s.classList.toggle("done", i<n); }); }
+function errMsg(e){
+  const c = e && e.code;
+  const m = {
+    not_granted:"لَمْ يُسْمَحْ لِلصَّفْحَةِ بِاسْتِعْمَالِ Claude. أَعِدْ فَتْحَ الصَّفْحَةِ وَاضْغَطْ «سَمَاح». · The page wasn't allowed to use Claude. Reopen the page and choose Allow.",
+    sampling_disabled:"Claude غَيْرُ مُتَاحٍ لِحِسَابِكَ. · Claude isn't available on your account. Tell your teacher.",
+    rate_limited:"وَصَلْتَ إِلَى الْحَدِّ الْمَسْمُوحِ الْآنَ. حَاوِلْ بَعْدَ قَلِيلٍ. · You've hit your usage limit for now. Try again a little later.",
+    session_expired:"اِنْتَهَتْ جَلْسَتُكَ. سَجِّلِ الدُّخُولَ مَرَّةً أُخْرَى. · Your session expired. Sign in again.",
+    image_rejected:"لَمْ تُقْبَلْ إِحْدَى الصُّوَرِ. اِسْتَعْمِلْ صُوَرَ JPG أَوْ PNG. · One photo couldn't be used. Try a JPG or PNG photo.",
+    images_unavailable:"لَا يُمْكِنُ إِرْسَالُ الصُّوَرِ هُنَا. · Photos can't be sent from this view. Open the link in the Claude app or website.",
+    invalid_json:"لَمْ يَكْتَمِلِ الرَّدُّ. اِضْغَطِ الزِّرَّ مَرَّةً أُخْرَى. · The reply came back incomplete. Press the button again.",
+    refused:"تَعَذَّرَ تَقْيِيمُ هَذَا النَّصِّ. · This text couldn't be checked. Make sure it's your essay.",
+    prompt_too_large:"النَّصُّ طَوِيلٌ جِدًّا. · The text is too long to check in one go."
+  };
+  return m[c] || "حَدَثَ خَلَلٌ فِي الِاتِّصَالِ. حَاوِلْ مَرَّةً أُخْرَى. · Something went wrong with the connection. Please try again.";
+}
+function fail(boxId, e){
+  if (e && e.code === "cancelled") return;
+  $(boxId).textContent = errMsg(e); show(boxId);
+  if (e && ["not_granted","sampling_disabled","not_declared","capability_disabled"].includes(e.code)) show("unavail");
+}
+
+/* ---------- files ---------- */
+function shrink(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file); const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, 2000 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(b => { URL.revokeObjectURL(url); b ? res({blob:b, url:URL.createObjectURL(b)}) : rej(); }, "image/jpeg", 0.88);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(); };
+    img.src = url;
+  });
+}
+async function addFiles(list){
+  for (const f of list){
+    if (!/^image\//.test(f.type)) continue;
+    if (files.length >= maxImages) break;
+    try { files.push(await shrink(f)); } catch {}
+  }
+  renderThumbs();
+}
+function renderThumbs(){
+  const t = $("thumbs"); t.replaceChildren();
+  files.forEach((f,i) => {
+    const d = document.createElement("div"); d.className = "thumb";
+    const im = document.createElement("img"); im.src = f.url; im.alt = "صفحة " + (i+1);
+    const sp = document.createElement("span"); sp.textContent = "صَفْحَةٌ " + (i+1) + " · Page " + (i+1);
+    const x = document.createElement("button"); x.type="button"; x.textContent = "×"; x.setAttribute("aria-label","Remove page " + (i+1));
+    x.onclick = () => { URL.revokeObjectURL(f.url); files.splice(i,1); renderThumbs(); };
+    d.append(im, sp, x); t.append(d);
+  });
+  $("btnRead").disabled = !files.length || !sample;
+  $("countNote").textContent = files.length ? `${files.length} page(s) · up to ${maxImages}` : "";
+}
+$("file").addEventListener("change", e => { addFiles([...e.target.files]); e.target.value = ""; });
+const drop = $("drop");
+["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => addFiles([...e.dataTransfer.files]));
+
+/* ---------- step 1: transcribe ---------- */
+$("btnRead").onclick = async () => {
+  show("err1", false); $("btnRead").disabled = true; show("busy1");
+  const prompt = `You are transcribing a handwritten Arabic essay by a Pre-University student at a Singapore madrasah. The ${files.length} image(s) are the essay's pages, in order.
+
+Transcribe EXACTLY what the student wrote, word for word, in Arabic script.
+- Do NOT correct spelling, grammar, case endings or word choice. Keep every mistake as written; the essay will be assessed on it.
+- Add diacritics only where the student wrote them.
+- Keep paragraph breaks: separate paragraphs with one blank line.
+- Ignore crossed-out words. If a word is truly illegible, write [؟] in its place.
+- Ignore page headers, names, class and date lines.
+
+Reply with only this JSON:
+{"text": "<full transcription>", "unclear": ["<up to 10 words you were unsure of, exactly as you transcribed them>"], "legibility": "good" | "fair" | "poor", "isEssay": true}
+If the images do not contain handwritten Arabic writing, reply {"text":"","unclear":[],"legibility":"poor","isEssay":false}.`;
+  try {
+    const r = await sample.json(prompt, {images: files.map(f=>f.blob), modelTier:"complex"});
+    if (!r || r.isEssay === false || !String(r.text||"").trim()){
+      $("err1").textContent = "لَمْ نَجِدْ كِتَابَةً عَرَبِيَّةً وَاضِحَةً فِي الصُّوَرِ. أَعِدِ التَّصْوِيرَ بِوُضُوحٍ. · We couldn't find clear Arabic handwriting in the photos. Retake them in better light.";
+      show("err1"); return;
+    }
+    $("transcript").value = String(r.text).trim();
+    const u = Array.isArray(r.unclear) ? r.unclear.slice(0,10) : [];
+    const box = $("unclear"); box.replaceChildren();
+    u.forEach(w => { const c = document.createElement("span"); c.className="chip unclear"; c.textContent = String(w); box.append(c); });
+    show("unclearBox", u.length > 0);
+    updWC(); show("p1", false); show("p2"); setStep(2);
+    $("transcript").focus();
+  } catch(e){ fail("err1", e); }
+  finally { show("busy1", false); $("btnRead").disabled = !files.length; }
+};
+function updWC(){ const n = words($("transcript").value); const w=$("wc");
+  w.className = "wc" + (n<250?" low":n>400?" high":"");
+  w.textContent = `عَدَدُ الْكَلِمَاتِ: ${n} · ${n} words (required 250–400)` + (n<250?" · below the range":n>400?" · above the range":""); }
+$("transcript").addEventListener("input", updWC);
+$("btnBack1").onclick = () => { show("p2", false); show("p1"); setStep(1); };
+
+/* ---------- step 2: assess ---------- */
+$("btnAssess").onclick = async () => {
+  const text = $("transcript").value.trim();
+  if (text.split(/\s+/).length < 30){
+    $("err2").textContent = "النَّصُّ قَصِيرٌ جِدًّا لِلتَّقْيِيمِ. · The text is too short to assess. Check the full essay is there.";
+    show("err2"); return;
+  }
+  show("err2", false); $("btnAssess").disabled = true; show("busy2");
+  const lang = $("flang").value;
+  const prompt = `You are an experienced, fair and encouraging Arabic teacher at Madrasah Aljunied Al-Islamiah, Singapore, giving formative feedback to a Pre-University One student on an essay (مقال) written in response to an exam-style prompt. The student will read your feedback directly, so be warm, specific and honest, with adab. Your score is indicative only; the teacher gives the final mark.
+
+TASK (school exam format: choose one topic, write about 250–400 words in 30 minutes):
+Topic: ${chosen().t}
+Prompt: ${chosen().q}
+
+WORD COUNT of the student's essay (counted by the page): ${words(text)} words. If clearly outside 250–400, mention it under the message criterion; a short essay usually cannot fully develop ideas.
+
+DEPARTMENT RUBRIC (use these bands exactly):
+${RUBRIC}
+
+WHAT THE UNIT TAUGHT (genre conventions to look for):
+${GENRE}
+
+STUDENT ESSAY (transcribed from handwriting; paragraphs separated by blank lines):
+<<<
+${text.slice(0, 12000)}
+>>>
+
+Marking guidance:
+- Judge against Pre-University One expectations in a Singapore madrasah. Be calibrated: do not inflate. Pick the band whose descriptors best fit, then a mark within it.
+- A transcription may contain a few misread words; do not penalise an isolated odd word that looks like a reading slip.
+- Ground every strength and improvement in the student's own words: quote short phrases from the essay EXACTLY as written (Arabic).
+- For improvements, give a concrete rewritten version of the student's own sentence in correct, natural Arabic at their level (not a whole new paragraph).
+- language_errors: pick the most instructive errors (max 6), each with the original, a correction, and the rule in a few words.
+- Write all explanations (summary, reason, point, why, note, rule, next_steps) in ${LANGNAME[lang]}. Keep Arabic quotes, corrections and rewrites in Arabic.
+- task_coverage: break the prompt into its separate demands (each question or instruction such as ناقش / بيّن / ما رأيك), in Arabic, and say how well the essay addresses each. Weigh this heavily in the message criterion.
+- tools_used: choose only from this list, and only those genuinely used: ${TOOLS.join("، ")}.
+
+Reply with only this JSON:
+{
+ "criteria": {
+   "language": {"score": 0-12, "band": "<Arabic band label from rubric>", "reason": "<2-3 sentences>"},
+   "message": {"score": 0-12, "band": "<Arabic band label>", "reason": "<2-3 sentences>"},
+   "concept": {"score": 0-6, "band": "<Arabic band label>", "reason": "<2-3 sentences>"}
+ },
+ "summary": "<2 sentences overall>",
+ "task_coverage": [{"demand": "<Arabic, short>", "status": "ok"|"weak"|"missing", "note": "<one short sentence>"}],
+ "structure": [
+   {"part": "<e.g. المقدمة / الفقرة الأولى / الخاتمة>", "type": "intro" | "body" | "conclusion",
+    "claim": "ok"|"weak"|"missing", "evidence": "ok"|"weak"|"missing", "reasoning": "ok"|"weak"|"missing", "link": "ok"|"weak"|"missing",
+    "note": "<one short sentence>"}
+ ],
+ "strengths": [{"point": "<what they did well>", "quote": "<exact Arabic phrase>"}],
+ "improvements": [{"point": "<what to improve>", "quote": "<exact Arabic phrase>", "rewrite": "<improved Arabic>", "why": "<one sentence>"}],
+ "language_errors": [{"original": "", "corrected": "", "rule": ""}],
+ "tools_used": ["..."],
+ "next_steps": ["<2-3 concrete actions for the redraft>"]
+}
+For intro/conclusion rows, use claim = states the position, evidence = engages the reader / summarises, reasoning = returns to the question, link = call to action; mark what does not apply as "ok" only if present. Give 3 strengths and 3 improvements.`;
+  try {
+    const r = await sample.json(prompt, {modelTier:"complex"});
+    if (!r || !r.criteria) throw {code:"invalid_json"};
+    lastReport = r; render(r, lang);
+    ["p2"].forEach(p=>show(p,false)); ["p3","p3b","p4","p5","p6","p7","p8","p9"].forEach(p=>show(p));
+    setStep(3); $("p3").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  } catch(e){ fail("err2", e); }
+  finally { show("busy2", false); $("btnAssess").disabled = false; }
+};
+
+/* ---------- render ---------- */
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const clamp = (v, m) => Math.max(0, Math.min(m, Math.round(Number(v) || 0)));
+const dirFor = lang => lang === "ar" ? "rtl" : "ltr";
+function ltrText(tag, txt, lang){ const e = el(tag, null, txt); e.dir = dirFor(lang); if (lang !== "ar") e.classList.add("lang-ltr"); return e; }
+
+function render(r, lang){
+  let tot = 0;
+  const crit = $("crit"); crit.replaceChildren();
+  for (const k of ["language","message","concept"]){
+    const c = (r.criteria||{})[k] || {}; const s = clamp(c.score, MAX[k]); tot += s;
+    const box = el("div","c");
+    const head = el("div","c-head");
+    const t = el("h3"); t.append(NAMES[k].ar + " "); t.append(el("span","en", NAMES[k].en));
+    head.append(t, el("span","c-mark", `${s} / ${MAX[k]}`));
+    const bar = el("div","bar"); const i = el("i"); i.style.width = (s / MAX[k] * 100) + "%"; bar.append(i);
+    box.append(head, bar);
+    if (c.band) box.append(el("div","band", String(c.band)));
+    if (c.reason) box.append(ltrText("p", String(c.reason), lang));
+    box.lastChild.style.margin = "0";
+    crit.append(box);
+  }
+  $("total").replaceChildren(String(tot), el("small", null, " / 30"));
+  $("summary").replaceChildren(ltrText("span", String(r.summary||""), lang));
+
+  // task coverage
+  const dm = $("demands"); dm.replaceChildren();
+  const mark = {ok:["✓","st-ok"], weak:["◐","st-weak"], missing:["✗","st-miss"]};
+  (Array.isArray(r.task_coverage)?r.task_coverage:[]).forEach(d => {
+    const m = mark[d.status] || mark.missing; const li = el("li");
+    const body = el("div"); body.append(el("div","d", String(d.demand||"")));
+    if (d.note) body.append(ltrText("div", String(d.note), lang));
+    li.append(el("span", m[1], m[0]), body); dm.append(li);
+  });
+  const n = words($("transcript").value);
+  $("wcReport").textContent = `Topic: ${chosen().t} · ${n} words (required 250–400)`;
+
+  // structure
+  const st = $("struct"); st.replaceChildren();
+  const hr = el("tr");
+  [["الْجُزْءُ","Part"],["تَأْكِيدٌ","Claim"],["تَدْلِيلٌ","Evidence"],["تَعْلِيلٌ","Reason"],["رَبْطٌ","Link"],["مُلَاحَظَةٌ","Note"]].forEach(([a,b])=>{
+    const th = el("th"); th.append(a, el("br"), el("span","en",b)); hr.append(th);
+  });
+  st.append(hr);
+  const sym = {ok:["✓","st-ok","Present"], weak:["◐","st-weak","Weak"], missing:["✗","st-miss","Missing"]};
+  (Array.isArray(r.structure)?r.structure:[]).forEach(row => {
+    const tr = el("tr");
+    tr.append(el("td", null, String(row.part||"")));
+    for (const k of ["claim","evidence","reasoning","link"]){
+      const v = sym[row[k]] || sym.missing; const td = el("td", v[1], v[0]); td.title = v[2]; td.setAttribute("aria-label", v[2]); tr.append(td);
+    }
+    const n = ltrText("td", String(row.note||""), lang); n.classList.add("l"); tr.append(n);
+    st.append(tr);
+  });
+
+  // strengths
+  const sl = $("strengths"); sl.replaceChildren();
+  (r.strengths||[]).forEach(s => {
+    const li = el("li","item"); li.append(ltrText("div", String(s.point||""), lang));
+    if (s.quote) li.append(el("q", null, String(s.quote)));
+    sl.append(li);
+  });
+
+  // improvements
+  const il = $("improve"); il.replaceChildren();
+  (r.improvements||[]).forEach(s => {
+    const li = el("li","item imp"); li.append(ltrText("strong", String(s.point||""), lang));
+    const f = el("div","fix");
+    if (s.quote){ f.append(el("span","k","كَتَبْتَ · You wrote"), el("span","ar", String(s.quote))); }
+    if (s.rewrite){ f.append(el("span","k","جَرِّبْ · Try"), el("span","ar", String(s.rewrite))); }
+    li.append(f);
+    if (s.why) li.append(ltrText("div", String(s.why), lang));
+    il.append(li);
+  });
+
+  // errors
+  const el2 = $("errors"); el2.replaceChildren();
+  const errs = Array.isArray(r.language_errors) ? r.language_errors.slice(0,6) : [];
+  show("p7", errs.length > 0);
+  errs.forEach(x => {
+    const li = el("li","item imp"); const f = el("div","fix");
+    f.append(el("span","k","✗"), el("span","ar strike", String(x.original||"")), el("span","k","✓"), el("span","ar", String(x.corrected||"")));
+    li.append(f); if (x.rule) li.append(ltrText("div", String(x.rule), lang)); el2.append(li);
+  });
+
+  // tools
+  const used = (r.tools_used||[]).map(t => String(t).replace(/[ً-ْ]/g,""));
+  const tb = $("tools"); tb.replaceChildren();
+  TOOLS.forEach(t => {
+    const bare = t.replace(/[ً-ْ]/g,"");
+    const on = used.some(u => u && (u.includes(bare) || bare.includes(u)));
+    tb.append(el("span", "chip" + (on ? " used" : ""), t));
+  });
+
+  // next
+  const nx = $("next"); nx.replaceChildren();
+  (r.next_steps||[]).forEach(s => nx.append(ltrText("li", String(s), lang)));
+  lastReport._total = tot;
+}
+
+/* ---------- actions ---------- */
+$("btnCopy").onclick = async () => {
+  if (!lastReport) return;
+  const r = lastReport, c = r.criteria || {};
+  const lines = [
+    "التغذية الراجعة للورقة الأولى قبل الامتحان · Feedback (indicative)",
+    `Total: ${r._total} / 30`,
+    `Language ${clamp(c.language?.score,12)}/12 · Message ${clamp(c.message?.score,12)}/12 · Concept ${clamp(c.concept?.score,6)}/6`,
+    `Topic: ${chosen().t} · ${words($("transcript").value)} words`,
+    "", String(r.summary||""), "", "Strengths:",
+    ...(r.strengths||[]).map(s => `+ ${s.point} «${s.quote||""}»`),
+    "", "Improve:",
+    ...(r.improvements||[]).map(s => `- ${s.point}\n  «${s.quote||""}» → «${s.rewrite||""}»`),
+    "", "Next steps:", ...(r.next_steps||[]).map((s,i) => `${i+1}. ${s}`)
+  ];
+  const txt = lines.join("\n");
+  try { await navigator.clipboard.writeText(txt); show("copied"); setTimeout(()=>show("copied",false), 2000); }
+  catch { const b = $("copyBox"); b.value = txt; show("copyBox"); b.focus(); b.select(); }
+};
+$("btnRedo").onclick = () => { ["p3","p3b","p4","p5","p6","p7","p8","p9"].forEach(p=>show(p,false)); show("p2"); setStep(2); $("transcript").focus(); };
+$("btnNew").onclick = () => {
+  files.forEach(f => URL.revokeObjectURL(f.url)); files = []; lastReport = null; renderThumbs();
+  $("transcript").value = ""; ["p2","p3","p3b","p4","p5","p6","p7","p8","p9","err1","err2"].forEach(p=>show(p,false));
+  show("p1"); setStep(1); window.scrollTo(0,0);
+};
+
+/* ---------- boot ---------- */
+(async () => {
+  try { sample = window.claude ? await window.claude.use("sample") : null; } catch { sample = null; }
+  if (!sample){ show("unavail"); renderThumbs(); return; }
+  try {
+    const lim = await sample.limits();
+    if (!lim || !lim.images){ show("unavail"); sample = null; }
+    else maxImages = Math.min(lim.images.maxCount || 5, 6);
+  } catch { /* keep going; call will report */ }
+  renderThumbs();
+})();
+})();
+</script>
+
+</body></html>
